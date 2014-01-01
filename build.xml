@@ -33,7 +33,7 @@
     </target>
 
     <target name="run-jar" description="Run things, from the jar file">
-        <!-- why ant can't juse "know" to fork if a jar file is provide? who knows -->
+        <!-- why can't ant just "know" to fork if a jar file is provided? -->
         <java jar="${dist.dir}/antpractice.jar" fork="true" />
     </target>
 
