@@ -9,13 +9,13 @@
     <property name="src.dir" location="src" />
 
     <target name="clean-build" description="Remove all files from the build directory">
-        <delete>
+        <delete includeemptydirs="true">
             <fileset dir="${build.dir}" excludes=".gitignore" />
         </delete>
     </target>
 
     <target name="clean-dist" description="Remove all files from the dist directory">
-        <delete>
+        <delete includeemptydirs="true">
             <fileset dir="${dist.dir}" excludes=".gitignore" />
         </delete>
     </target>
