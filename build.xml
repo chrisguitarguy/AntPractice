@@ -1,0 +1,49 @@
+<project name="Ant Practice" basedir=".">
+
+    <description>
+        Just learning a bit about ant
+    </description>
+
+    <property name="build.dir" location="build" />
+    <property name="dist.dir" location="dist" />
+    <property name="src.dir" location="src" />
+
+    <target name="clean-build" description="Remove all files from the build directory">
+        <delete>
+            <fileset dir="${build.dir}" excludes=".gitignore" />
+        </delete>
+    </target>
+
+    <target name="clean-dist" description="Remove all files from the dist directory">
+        <delete>
+            <fileset dir="${dist.dir}" excludes=".gitignore" />
+        </delete>
+    </target>
+
+    <target name="clean" 
+        depends="clean-build,clean-dist"
+        description="Remove all files from the build and dist directories" />
+
+    <target name="compile" depends="clean-build" description="Compile all the things">
+        <javac srcdir="${src.dir}" destdir="${build.dir}" />
+    </target>
+
+    <target name="run" description="Run things">
+        <java classname="me.christopherdavis.antpractice.HelloWorld" classpath="${build.dir}" />
+    </target>
+
+    <target name="run-jar" description="Run things, from the jar file">
+        <!-- why ant can't juse "know" to fork if a jar file is provide? who knows -->
+        <java jar="${dist.dir}/antpractice.jar" fork="true" />
+    </target>
+
+    <target name="jar" depends="compile,clean-dist" description="Create a jarfile">
+        <jar destfile="${dist.dir}/antpractice.jar" basedir="${build.dir}">
+            <manifest>
+                <attribute name="Build-By" value="${user.name}" />
+                <attribute name="Main-Class" value="me.christopherdavis.antpractice.HelloWorld" />
+            </manifest>
+        </jar>
+    </target>
+
+</project>
