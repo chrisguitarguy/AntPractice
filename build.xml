@@ -1,4 +1,4 @@
-<project name="Ant Practice" basedir=".">
+<project name="Ant Practice" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant">
 
     <description>
         Just learning a bit about ant
@@ -7,6 +7,19 @@
     <property name="build.dir" location="build" />
     <property name="dist.dir" location="dist" />
     <property name="src.dir" location="src" />
+    <property name="lib.dir" location="lib" />
+
+    <path id="compile.path">
+        <fileset dir="${lib.dir}">
+            <!-- is this the way to do this? should it be ivy:cachepath instead? -->
+            <include name="**/*.jar" />
+        </fileset>
+    </path>
+
+    <path id="run.path">
+        <pathelement path="${compile.path}" />
+        <pathelement location="${build.dir}" />
+    </path>
 
     <target name="clean-build" description="Remove all files from the build directory">
         <delete includeemptydirs="true">
@@ -20,16 +33,22 @@
         </delete>
     </target>
 
+    <target name="clean-deps" description="Remove all the depdency files">
+        <delete includeemptydirs="true">
+            <fileset dir="${lib.dir}" excludes=".gitignore" />
+        </delete>
+    </target>
+
     <target name="clean" 
         depends="clean-build,clean-dist"
         description="Remove all files from the build and dist directories" />
 
     <target name="compile" depends="clean-build" description="Compile all the things">
-        <javac srcdir="${src.dir}" destdir="${build.dir}" />
+        <javac srcdir="${src.dir}" destdir="${build.dir}" classpathref="compile.path" />
     </target>
 
     <target name="run" description="Run things">
-        <java classname="me.christopherdavis.antpractice.HelloWorld" classpath="${build.dir}" />
+        <java classname="me.christopherdavis.antpractice.HelloWorld" classpathref="run.path" />
     </target>
 
     <target name="run-jar" description="Run things, from the jar file">
@@ -44,6 +63,10 @@
                 <attribute name="Main-Class" value="me.christopherdavis.antpractice.HelloWorld" />
             </manifest>
         </jar>
+    </target>
+
+    <target name="deps" description="Retrieve dependencies with Ivy">
+        <ivy:retrieve />
     </target>
 
 </project>
